@@ -1,24 +1,36 @@
-from app import db
+from app import db, ma
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, unique=True)
-    nickname = db.Column(db.String)
-    nome = db.Column(db.String)
-    birth = db.Column(db.Date)
-    password = db.Column(db.String)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    email = db.Column(db.String, unique=True, nullablle=False)
+    nickname = db.Column(db.String, nullablle=False)
+    name = db.Column(db.String, nullablle=False)
+    birth = db.Column(db.Date, nullablle=False)
+    password = db.Column(db.String, nullablle=False)
 
-    def __init__(self, email, nickname, nome, birth, password):
+    def __init__(self, email, nickname, name, birth, password):
         self.email = email
         self.nickname = nickname
-        self.nome = nome
+        self.name = name
         self.birth = birth
-        self.password = password
+        self.password = generate_password_hash(password)
+
+    def verify_password(self,password):
+        return check_password_hash(self.password, password)
 
     def __repr__(self):
         return "<User %r>" % self.username
+
+
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('id','email','nickname','name','birth')
+
+user_share_schema = UserSchema()
+users_share_schema = UserSchema(many=True)
 
 
 class Post(db.Model):
