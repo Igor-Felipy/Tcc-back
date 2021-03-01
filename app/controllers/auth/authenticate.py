@@ -21,8 +21,10 @@ def jwt_required(f):
 
 
         try:
-            token_pure = token.replace("Bearer", "")
-            decoded = jwt.decode(token_pure, current_app.config['SECRET_KEY'])
+            token_pure = token.replace("Bearer ","")
+            print(token)
+            print(token_pure)
+            decoded = jwt.decode(token_pure, current_app.config['SECRET_KEY'], algorithms="HS256")
             current_user = User.query.get(decoded['id'])
         except:
             return jsonify({"error":"invalid token."}), 403

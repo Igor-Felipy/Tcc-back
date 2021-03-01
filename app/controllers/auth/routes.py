@@ -10,17 +10,19 @@ from app.controllers.auth.authenticate import jwt_required
 
 @auth.route('/auth/register', methods=["POST"])
 def register():
-    email = request.json('email')
+    email = request.json['email']
     nickname = request.json['nickname']
     name = request.json['name']
     birth = request.json['birth']
     password = request.json['password']
 
+    date_converted = datetime.datetime.strptime(birth, '%d/%m/%Y').date()
+
     user = User(
         email,
         nickname,
         name,
-        birth,
+        date_converted,
         password
     )
 
@@ -52,9 +54,9 @@ def login():
         "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=25)
     }
 
-    token = jwt.encode(payload, app.config['SECRET_KEY'])
+    token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm="HS256")
 
-    return jsonify({"token": token.decode('utf-8')})
+    return jsonify({"token": token})
 
 
 @auth.route('/auth/protected')
@@ -64,4 +66,4 @@ def protected(current_user):
         User.query.all()
     )
 
-    return jsonify({"current_user":current_user.username})
+    return jsonify({"current_user":current_user.name})
