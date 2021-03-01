@@ -3,7 +3,7 @@ from functools import wraps
 import jwt 
 from flask import request, jsonify, current_app
 
-from app.models import User
+from app.models.tables import User
 
 def jwt_required(f):
     @wraps(f)

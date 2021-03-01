@@ -5,11 +5,11 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email = db.Column(db.String, unique=True, nullablle=False)
-    nickname = db.Column(db.String, nullablle=False)
-    name = db.Column(db.String, nullablle=False)
-    birth = db.Column(db.Date, nullablle=False)
-    password = db.Column(db.String, nullablle=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    nickname = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    birth = db.Column(db.Date, nullable=False)
+    password = db.Column(db.String, nullable=False)
 
     def __init__(self, email, nickname, name, birth, password):
         self.email = email
@@ -36,10 +36,10 @@ users_share_schema = UserSchema(many=True)
 class Post(db.Model):
     __tablename__ = "posts"
 
-    id = db.column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     caption = db.Column(db.String)
     image = db.Column(db.String)
-    date = db.Column(db.Datetime)
+    date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     user = db.relationship("User",foreign_keys=user_id)
@@ -62,7 +62,7 @@ class Detail(db.Model):
     caption_feels = db.Column(db.String)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
-    post = db.relationship("Post", foreigen_keys=post_id)
+    post = db.relationship("Post", foreign_keys=post_id)
 
     def __init__(self, image_feels, caption_feels, post_id):
         self.image_feels = image_feels
@@ -96,8 +96,8 @@ class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String)
-    post_id = db.Column(db.Integer, db.ForeingKey('posts.id'))
-    user_id = db.Column(db.Integer, db.ForeingKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     post = db.relationship("Post", foreign_keys=post_id)
     user = db.relationship("User", foreign_keys=user_id) 
@@ -115,8 +115,8 @@ class Follow(db.Model):
     __tablename__ = "follow"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeingKey('users.id'))
-    follower_id = db.Column(db.Integer, db.ForeingKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     
     user = db.relationship("User", foreign_keys=user_id)
     follower = db.relationship("User", foreign_keys=user_id)
