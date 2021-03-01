@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-controller = Blueprint("controller",__name__)
+feed = Blueprint("feed",__name__)
 
 from . import routes

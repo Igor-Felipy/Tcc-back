@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-controller = Blueprint("controller",__name__)
+post_detail = Blueprint("post_detail",__name__)
 
 from . import routes

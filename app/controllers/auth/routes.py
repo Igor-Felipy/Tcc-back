@@ -61,7 +61,7 @@ def login():
 
 @auth.route('/auth/protected')
 @jwt_required
-def protected(current_user):
+def protected(current_user):    
     result =  users_share_schema.dump(
         User.query.all()
     )

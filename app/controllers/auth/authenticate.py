@@ -22,8 +22,6 @@ def jwt_required(f):
 
         try:
             token_pure = token.replace("Bearer ","")
-            print(token)
-            print(token_pure)
             decoded = jwt.decode(token_pure, current_app.config['SECRET_KEY'], algorithms="HS256")
             current_user = User.query.get(decoded['id'])
         except:
