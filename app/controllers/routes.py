@@ -13,7 +13,7 @@ def definition():
             "/user/edit_user":"Route used to edit users information (JWT required)"
         },
         "post":{
-            "/post":"This route get an especific post",
+            "/post":"This route return an especific post",
             "/post/new_post":"This route create a new post",
             "/post/edit_post":"This route edit a post",
             "/post/delet_post":"This route delete a post"

@@ -1,0 +1,11 @@
+/
+/user/edit_user
+/post
+/post/new_post
+/post/edit_post
+/post/delete_post
+/detail
+/feed
+/auth/login
+/auth/register
+/auth/protected
