@@ -1,5 +1,8 @@
 from . import posts
 from ..auth.authenticate import jwt_required
+from app.models.tables import  Comment, Like
+from app import db
+from flask import jsonify, request
 
 
 #posts routes
@@ -55,16 +58,17 @@ def qtd_comment(current_user):
 @posts.route("/post/like_qtd", methods=["POST"])
 @jwt_required
 def like_qtd(current_user):
-    return "quantity likes route"
+    post_id = request.json['post_id']
+    qtt_like = Like.query.filter_by(post_id=post_id).count()
+    return jsonify({"like quantity":qtt_like})
 
 
 @posts.route("/post/new_like", methods=["POST"])
 @jwt_required
 def new_like(current_user):
+    post_id = request.json['post_id']
+    new_like = Like(post_id,current_user.id)
+    db.session.add(new_like)
+    db.session.commit()
     return "New_like route"
 
-
-@posts.route("/post/cancel_like", methods=["POST"])
-@jwt_required
-def cancel_like(current_user):
-    return "cancel_like route"
