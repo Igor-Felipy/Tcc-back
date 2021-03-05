@@ -1,39 +1,77 @@
 from . import posts
 from ..auth.authenticate import jwt_required
-from app.models.tables import  Comment, Like
+from app.models.tables import  Comment, Like, Post
 from app import db
 from flask import jsonify, request
+from datetime import datetime
 
 
 #posts routes
 @posts.route("/post",methods=["POST"])
 @jwt_required
 def post(current_user):
-    return "post route"
+    id = request.json['post_id']
+    try:
+        post = Post.query.filter_by(id=id).first()
+        qtt_comments = Comment.query.filter_by(post_id=id).count()
+        return jsonify({"post data":post,"qtt comments":qtt_comments})
+    except:
+        return jsonify({"error":"Post not found"})
+
+
 
 @posts.route("/post/new_post", methods=["POST"])
 @jwt_required
 def new_post(current_user):
-    return "new_post route"
+    try:
+        caption = request.json['caption']
+        image = request.json['image']
+        date = datetime.utcnow()
+        Post(caption,image,date,user_id=current_user.id)
+        return jsonify({"ok":"post is created"})
+    except:
+        return jsonify({"error":"Something went wrong!"})
 
-
-@posts.route("/post/edit_post", methods=["POST"])
+@posts.route("/post/edit_caption", methods=["POST"])
 @jwt_required
 def edit_post(current_user):
-    return "edit_post route"
+    id = request.json['post_id']
+    caption = request.json['caption']
+    try:
+        post = Post.query.filter_by(id=id).first()
+        if post.user_id == current_user.id:
+            post(caption=caption)
+            db.session.add(post)
+            db.session.commit()
+            return jsonify({"ok":"caption edited"})
+        else:
+            return jsonify({"error":"user cannot edit this post"})
+    except:
+        return jsonify({"":"something wrong is'nt right"})
 
 
 @posts.route("/post/delete_post", methods=["POST"])
 @jwt_required
 def delete_post(current_user):
-    return "delete_post route"
+    id = request.json['comment_id']
+    try:
+        post = Comment.query.filter_by(id=id)
+        db.session.delete(post)
+        db.session.commit()
+        return jsonify({"OK":"post deleted"})
+    except:
+        return jsonify({"error":"error"})
 
 
 @posts.route("/post/comments", methods=["POST"])
 @jwt_required
 def commments(current_user):
-    return "all the coments from a post"
-
+    try:
+        post_id = request.json['post_id']
+        comments = Comment.query.filter_by(post_id=post_id).all()
+        return jsonify(comments)
+    except:
+        return jsonify({"error":"Something went wrong!"})
 
 
 
@@ -52,14 +90,6 @@ def New_comment(current_user):
     except:
         return jsonify({"error":"Something wrong is'nt right"})
 
-
-@posts.route("/post/qtd_comment", methods=["POST"])
-@jwt_required
-def qtd_comment(current_user):
-    post_id = request.json['post_id']
-    qtt_comments = Comment.query.filter_by(post_id=post_id).count()
-    return jsonify({"comments quantity":qtt_comments})
-    
 
 
 
