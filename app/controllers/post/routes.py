@@ -42,12 +42,23 @@ def commments(current_user):
 @posts.route("/post/new_comment", methods=["POST"])
 @jwt_required
 def New_comment(current_user):
-    return "Create a comment"
+    try:
+        comment = request.json['comment']
+        post_id = request.json['post_id']
+        new_comment = Comment(comment,post_id,current_user.id)
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify({"ok":"your comment has been added"})
+    except:
+        return jsonify({"error":"Something wrong is'nt right"})
+
 
 @posts.route("/post/qtd_comment", methods=["POST"])
 @jwt_required
 def qtd_comment(current_user):
-    return "Create a comment"
+    post_id = request.json['post_id']
+    qtt_comments = Comment.query.filter_by(post_id=post_id).count()
+    return jsonify({"comments quantity":qtt_comments})
     
 
 
