@@ -14,64 +14,69 @@ def post(current_user):
     try:
         post = Post.query.filter_by(id=id).first()
         qtt_comments = Comment.query.filter_by(post_id=id).count()
-        return jsonify({"post data":post,"qtt comments":qtt_comments})
+        return jsonify({
+            "post_id":post.id,
+            "caption":post.caption,
+            "image":post.image,
+            "date":post.date,
+            "post_owner_id":post.user_id,
+            "qtt_comments":qtt_comments
+        })
     except:
         return jsonify({"error":"Post not found"})
 
 
 
-@posts.route("/post/new_post", methods=["POST"])
+@posts.route("/post/new_post", methods=["POST"]) 
 @jwt_required
 def new_post(current_user):
     try:
         caption = request.json['caption']
         image = request.json['image']
         date = datetime.utcnow()
-        Post(caption,image,date,user_id=current_user.id)
+        post = Post(caption,image,date,user_id=current_user.id)
+        db.session.add(post)
+        db.session.commit()
         return jsonify({"ok":"post is created"})
     except:
         return jsonify({"error":"Something went wrong!"})
 
+
 @posts.route("/post/edit_caption", methods=["POST"])
 @jwt_required
 def edit_post(current_user):
-    id = request.json['post_id']
+    post_id = request.json['post_id']
     caption = request.json['caption']
     try:
-        post = Post.query.filter_by(id=id).first()
+        post = Post.query.filter_by(id=post_id).first()
         if post.user_id == current_user.id:
-            post(caption=caption)
+            post.caption=caption
             db.session.add(post)
             db.session.commit()
             return jsonify({"ok":"caption edited"})
         else:
             return jsonify({"error":"user cannot edit this post"})
     except:
-        return jsonify({"":"something wrong is'nt right"})
+        return jsonify({"error":"something wrong is'nt right"})
 
 
 @posts.route("/post/delete_post", methods=["POST"])
 @jwt_required
 def delete_post(current_user):
-    id = request.json['comment_id']
+    post_id = request.json['post_id']
     try:
-        post = Comment.query.filter_by(id=id)
-        db.session.delete(post)
+        post = db.session.query(Post).filter_by(id=post_id).delete()
+        print(1)
+        # db.session.delete(post)
+        print(2)
         db.session.commit()
+        print(3)
         return jsonify({"OK":"post deleted"})
     except:
         return jsonify({"error":"error"})
 
 
-@posts.route("/post/comments", methods=["POST"])
-@jwt_required
-def commments(current_user):
-    try:
-        post_id = request.json['post_id']
-        comments = Comment.query.filter_by(post_id=post_id).all()
-        return jsonify(comments)
-    except:
-        return jsonify({"error":"Something went wrong!"})
+
 
 
 
@@ -89,6 +94,17 @@ def New_comment(current_user):
         return jsonify({"ok":"your comment has been added"})
     except:
         return jsonify({"error":"Something wrong is'nt right"})
+
+
+@posts.route("/post/comments", methods=["POST"])
+@jwt_required
+def commments(current_user):
+    try:
+        post_id = request.json['post_id']
+        comments = Comment.query.filter_by(post_id=post_id).all()
+        return jsonify(comments)
+    except:
+        return jsonify({"error":"Something went wrong!"})
 
 
 
