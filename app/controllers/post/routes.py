@@ -102,7 +102,11 @@ def commments(current_user):
     try:
         post_id = request.json['post_id']
         comments = Comment.query.filter_by(post_id=post_id).all()
-        return jsonify(comments)
+        all_comments = dict()
+        for n in comments:
+            all_comments.update({str(n.id):n.comment})
+        print(all_comments)
+        return jsonify(all_comments)
     except:
         return jsonify({"error":"Something went wrong!"})
 
