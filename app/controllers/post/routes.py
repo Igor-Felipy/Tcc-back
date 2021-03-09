@@ -14,13 +14,15 @@ def post(current_user):
     try:
         post = Post.query.filter_by(id=id).first()
         qtt_comments = Comment.query.filter_by(post_id=id).count()
+        qtt_likes = Like.query.filter_by(post_id=id).count()
         return jsonify({
             "post_id":post.id,
             "caption":post.caption,
             "image":post.image,
             "date":post.date,
             "post_owner_id":post.user_id,
-            "qtt_comments":qtt_comments
+            "qtt_comments":qtt_comments,
+            "qtt_likes":qtt_likes
         })
     except:
         return jsonify({"error":"Post not found"})
@@ -105,7 +107,6 @@ def commments(current_user):
         all_comments = dict()
         for n in comments:
             all_comments.update({str(n.id):n.comment})
-        print(all_comments)
         return jsonify(all_comments)
     except:
         return jsonify({"error":"Something went wrong!"})
@@ -116,20 +117,26 @@ def commments(current_user):
 
 
 #likes routes
-@posts.route("/post/like_qtd", methods=["POST"])
-@jwt_required
-def like_qtd(current_user):
-    post_id = request.json['post_id']
-    qtt_like = Like.query.filter_by(post_id=post_id).count()
-    return jsonify({"like quantity":qtt_like})
-
-
 @posts.route("/post/new_like", methods=["POST"])
 @jwt_required
 def new_like(current_user):
-    post_id = request.json['post_id']
-    new_like = Like(post_id,current_user.id)
-    db.session.add(new_like)
-    db.session.commit()
-    return "New_like route"
+    try:
+        post_id = request.json['post_id']
+        new_like = Like(post_id,current_user.id)
+        db.session.add(new_like)
+        db.session.commit()
+        return jsonify({"ok":"like added"})
+    except:
+        return jsonify({"error":"something went wrong!"})
 
+
+@posts.route("/post/cancel_like", methods=["POST"])
+@jwt_required
+def cancel_like(current_user):
+    try:
+        post_id = request.json['post_id']
+        db.session.query(Like).filter_by(post_id=post_id).filter_by(user_id=current_user.id).delete()
+        db.session.commit()
+        return jsonify({"ok":"like canceled!"})
+    except:
+        return jsonify({"error":"something went wrong!"})
