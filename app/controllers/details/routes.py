@@ -25,6 +25,6 @@ def post_detail(current_user):
             post = Post.query.filter_by(id=post_id).first()
             score = SentimentIntensityAnalyzer.polarity_scores(post.caption)
 
-            new_detail = Detail(None,score,post_id)
+            new_detail = Detail(None,score.compound,post_id)
         except:
             return jsonify({"error":"try again later!"})
