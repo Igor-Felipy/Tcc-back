@@ -1,8 +1,8 @@
 from . import post_detail
 from ..auth.authenticate import jwt_required
 from flask import request, jsonify
-from app.models.tables import Detail
-from app.controllers.details.leia import SentimentIntensityAnalyzer
+from app.models.tables import Detail, Post
+from app.controllers.details.leia import SentimentIntensityAnalyzer 
 
 
 @post_detail.route("/detail", methods=["POST"])
@@ -22,8 +22,9 @@ def post_detail(current_user):
             return jsonify({"error":"something went wrong!"})
     else:
         try:
-            #criar os detalhes
-            pass
+            post = Post.query.filter_by(id=post_id).first()
+            score = SentimentIntensityAnalyzer.polarity_scores(post.caption)
+
+            new_detail = Detail(None,score,post_id)
         except:
             return jsonify({"error":"try again later!"})
-    return "details route"
