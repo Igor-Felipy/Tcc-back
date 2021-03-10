@@ -2,6 +2,7 @@ from . import post_detail
 from ..auth.authenticate import jwt_required
 from flask import request, jsonify
 from app.models.tables import Detail
+from app.controllers.details.leia import SentimentIntensityAnalyzer
 
 
 @post_detail.route("/detail", methods=["POST"])
