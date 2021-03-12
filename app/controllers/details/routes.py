@@ -23,15 +23,14 @@ def post_detail(current_user):
             return jsonify({"error":"something went wrong!"})
     else:
         try:
+            print(SentimentIntensityAnalyzer.polarity_scores('teste'))
             post = Post.query.filter_by(id=post_id).first()
             score = SentimentIntensityAnalyzer.polarity_scores(post.caption)
-
+            print(score)
             new_detail = Detail(None,score.compound,post_id)
             db.session.add(new_detail)
             db.session.commit()
-
             new_response = Detail.query.filter_by(post_id=post_id).first()
-
             return jsonify({
                 "id":new_response.id,
                 "image_feels":new_response.image_feels,
