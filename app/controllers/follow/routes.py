@@ -36,3 +36,13 @@ def user_follows(current_user):
     except:
         return jsonify({"error":"something went wrong!"})
     
+
+@follows.route("/follow/unfollow")
+@jwt_required
+def unfollow(current_user):
+    user_id = request.json['user_id']
+    try:
+        db.session.query(Follow).filter_by(follower_id=user_id,user_id=current_user.id).delete()
+        return jsonify({"ok":"follow deleted"})
+    except:
+        return jsonify({"error":"something went wrong!"})
