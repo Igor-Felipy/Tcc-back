@@ -2,7 +2,7 @@ from . import post_detail
 from ..auth.authenticate import jwt_required
 from flask import request, jsonify
 from app.models.tables import Detail, Post
-from app.controllers.details.leia import SentimentIntensityAnalyzer 
+from leia import SentimentIntensityAnalyzer 
 from app import db
 
 
@@ -23,9 +23,9 @@ def post_detail(current_user):
             return jsonify({"error":"something went wrong!"})
     else:
         try:
-            print(SentimentIntensityAnalyzer.polarity_scores('teste'))
+            analyser = SentimentIntensityAnalyzer()
             post = Post.query.filter_by(id=post_id).first()
-            score = SentimentIntensityAnalyzer.polarity_scores(post.caption)
+            score = analyser.polarity_scores(post.caption)
             print(score)
             new_detail = Detail(None,score.compound,post_id)
             db.session.add(new_detail)
