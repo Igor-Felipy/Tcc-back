@@ -58,15 +58,18 @@ class Detail(db.Model):
     __tablename__ = "details"
 
     id = db.Column(db.Integer, primary_key=True)
-    image_feels = db.Column(db.String)
-    caption_feels = db.Column(db.String)
+    neg = db.Column(db.Float)
+    neu = db.Column(db.Float)
+    pos = db.Column(db.Float)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
     post = db.relationship("Post", foreign_keys=post_id)
 
-    def __init__(self, image_feels, caption_feels, post_id):
-        self.image_feels = image_feels
-        self.caption_feels = caption_feels
+    def __init__(self, neg, neu, pos, post_id):
+        self.neg = neg
+        self.neu = neu
+        self.pos = pos
+        self.comp = comp
         self.post_id = post_id
 
     def __repr__(self):

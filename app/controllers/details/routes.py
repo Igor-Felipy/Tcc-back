@@ -15,8 +15,9 @@ def post_detail(current_user):
         try:
             return jsonify({
                 "id":detail.id,
-                "image_feels":detail.image_feels,
-                "caption_feels":detail.caption_feels,
+                "neg":detail.neg, 
+                "neu":detail.neu,
+                "pos":detail.pos,
                 "post_id":detail.post_id
             })
         except:
@@ -27,14 +28,15 @@ def post_detail(current_user):
             post = Post.query.filter_by(id=post_id).first()
             score = analyser.polarity_scores(post.caption)
             print(score)
-            new_detail = Detail(None,score.compound,post_id)
+            new_detail = Detail(None,score["neg"],score["neu"],score["pos"],post_id)
             db.session.add(new_detail)
             db.session.commit()
             new_response = Detail.query.filter_by(post_id=post_id).first()
             return jsonify({
                 "id":new_response.id,
-                "image_feels":new_response.image_feels,
-                "caption_feels":new_response.caption_feels,
+                "neg":new_response.neg, 
+                "neu":new_response.neu,
+                "pos":new_response.pos,
                 "post_id":new_response.post_id
             })
         except:
