@@ -16,12 +16,17 @@ def feed(current_user):
         ON follow.follower_id = {current_user.id};
     """)
     post_converted = dict()
+    count = 1
+    print('teste')
     for post in posts:
         post_converted.update({
-            "id":post.id,
-            "caption":post.caption,
-            "image":post.image,
-            "date":post.date,
-            "user_id":post.user_id
+            str(count):{
+                "id":post.id,
+                "caption":post.caption,
+                "image":post.image,
+                "date":post.date,
+                "user_id":post.user_id
+            }
         })
-    return jsonify({post_converted})
+        count+=1
+    return jsonify(post_converted)
