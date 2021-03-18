@@ -35,3 +35,6 @@ app.register_blueprint(user)
 
 from app.controllers import controller
 app.register_blueprint(controller)
+
+from app.controllers.follow import follows
+app.register_blueprint(follows)
