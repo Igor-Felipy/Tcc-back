@@ -61,11 +61,12 @@ class Detail(db.Model):
     neg = db.Column(db.Float)
     neu = db.Column(db.Float)
     pos = db.Column(db.Float)
+    comp = db.Column(db.Float)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
     post = db.relationship("Post", foreign_keys=post_id)
 
-    def __init__(self, neg, neu, pos, post_id):
+    def __init__(self, neg, neu, pos, comp, post_id):
         self.neg = neg
         self.neu = neu
         self.pos = pos
