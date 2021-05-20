@@ -51,7 +51,7 @@ def login():
 
     payload = {
         "id":user.id,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=25)
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(days=1)
     }
 
     token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm="HS256")
