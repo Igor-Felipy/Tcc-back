@@ -15,18 +15,17 @@ def feed(current_user):
         INNER JOIN users
         ON follow.follower_id = {current_user.id};
     """)
-    post_converted = dict()
+    post_converted = list()
     count = 1
     print('teste')
     for post in posts:
-        post_converted.update({
-            str(count):{
+        post_converted.append({
                 "id":post.id,
                 "caption":post.caption,
                 "image":post.image,
                 "date":post.date,
                 "user_id":post.user_id
             }
-        })
+        )
         count+=1
     return jsonify(post_converted)
