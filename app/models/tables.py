@@ -44,9 +44,8 @@ class Post(db.Model):
 
     user = db.relationship("User",foreign_keys=user_id)
 
-    def __init__(self, caption, image, date, user_id):
+    def __init__(self, caption, date, user_id):
         self.caption = caption
-        self.image = image
         self.date = date
         self.user_id = user_id
 

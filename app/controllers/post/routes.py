@@ -34,9 +34,8 @@ def post(current_user):
 def new_post(current_user):
     try:
         caption = request.json['caption']
-        image = request.json['image']
         date = datetime.utcnow()
-        post = Post(caption,image,date,user_id=current_user.id)
+        post = Post(caption,date,user_id=current_user.id)
         db.session.add(post)
         db.session.commit()
         return jsonify({"ok":"post is created"})
