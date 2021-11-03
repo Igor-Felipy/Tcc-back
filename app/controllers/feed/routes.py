@@ -15,6 +15,10 @@ def feed(current_user):
         INNER JOIN users
         ON follow.follower_id = {current_user.id};
     """)
+    profile_image = db.session.connection().execute(f"""
+        SELECT profile_image FROM users   
+        WHERE id = {current_user.id};
+    """)
     post_converted = list()
     count = 1
     print('teste')
@@ -24,7 +28,8 @@ def feed(current_user):
                 "caption":post.caption,
                 "image":post.image,
                 "date":post.date,
-                "user_id":post.user_id
+                "user_id":post.user_id,
+                "profile_image":profile_image
             }
         )
         count+=1

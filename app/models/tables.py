@@ -10,6 +10,7 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     birth = db.Column(db.Date, nullable=False)
     password = db.Column(db.String, nullable=False)
+    profile_image = db.Column(db.String)
 
     def __init__(self, email, nickname, name, birth, password):
         self.email = email

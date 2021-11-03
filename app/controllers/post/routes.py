@@ -4,6 +4,10 @@ from app.models.tables import  Comment, Like, Post
 from app import db
 from flask import jsonify, request
 from datetime import datetime
+from imgurpython import ImgurClient
+
+imgur_client_id = ""
+imgur_client_secret = ""
 
 
 #posts routes
@@ -33,8 +37,7 @@ def post(current_user):
 @jwt_required
 def new_post(current_user):
     try:
-        image = request.json['image']
-
+        image = request.files['image']
         caption = request.json['caption']
         date = datetime.utcnow()
         post = Post(caption,image,date,user_id=current_user.id)
