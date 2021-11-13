@@ -31,13 +31,24 @@ def post(current_user):
     except:
         return jsonify({"error":"Post not found"})
 
+@posts.route("/post/profile",methods=["POST"])
+@jwt_required
+def post_profile(current_user):
+    id = request.json['user_id']
+    try:
+        post = Post.query.filter_by(user_id=id)
+        return jsonify({
+            "posts":post
+        })
+    except:
+        return jsonify({"error":"Profile not found!"})
 
 
 @posts.route("/post/new_post", methods=["POST"]) 
 @jwt_required
 def new_post(current_user):
     try:
-        image = request.files['image']
+        image = request.json['image']
         caption = request.json['caption']
         date = datetime.utcnow()
         post = Post(caption,image,date,user_id=current_user.id)

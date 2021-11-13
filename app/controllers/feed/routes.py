@@ -7,7 +7,7 @@ from app import db
 
 @feed.route("/neutral", methods=["POST"])
 @jwt_required
-def feed(current_user):
+def feed_neutral(current_user):
     posts = db.session.connection().execute(f"""
         SELECT * FROM posts   
         INNER JOIN follow
@@ -37,7 +37,7 @@ def feed(current_user):
 
 @feed.route("/happy", methods=["POST"])
 @jwt_required
-def feed(current_user):
+def feed_happy(current_user):
     posts = db.session.connection().execute(f"""
         SELECT * FROM posts   
         INNER JOIN follow
@@ -67,7 +67,7 @@ def feed(current_user):
 
 @feed.route("/sad", methods=["POST"])
 @jwt_required
-def feed(current_user):
+def feed_sad(current_user):
     posts = db.session.connection().execute(f"""
         SELECT * FROM posts   
         INNER JOIN follow
