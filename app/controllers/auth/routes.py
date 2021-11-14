@@ -25,12 +25,14 @@ def register():
         date_converted,
         password
     )
+    print(user)
 
     db.session.add(user)
     db.session.commit()
 
     result = user_share_schema.dump(
         User.query.filter_by(email=email).first()
+
     )
 
     return jsonify(result)
