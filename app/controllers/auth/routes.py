@@ -43,9 +43,10 @@ def register():
 def login():
     email = request.json['email']
     password = request.json['password']
+    print(request.json)
 
     user = User.query.filter_by(email=email).first_or_404()
-
+    print(user)
     if not user.verify_password(password):
         return jsonify({
             "error":"wrong credentials"
